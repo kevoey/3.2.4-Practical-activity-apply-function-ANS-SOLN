@@ -1,0 +1,361 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "498c57d8",
+   "metadata": {},
+   "source": [
+    "# 3.2.4 Practical activity: apply() function"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bb1944ad",
+   "metadata": {},
+   "source": [
+    "# My answers\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c1454aa4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Approach\n",
+    "\n",
+    "#You can continue to work in your own Jupyter Notebook, or you can use the solution file from the previous practical \n",
+    "#activity ( LSE_DA201_PA_reshaping_dataframe_solution.ipynb ) as a starting point for this portion of the analysis."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a12c3db0",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Previous solution\n",
+    "\n",
+    "# Import Pandas.\n",
+    "import pandas as pd\n",
+    "\n",
+    "# Load the Excel data using pd.read_excel.\n",
+    "movies = pd.read_excel('movies_merge.xlsx')\n",
+    "\n",
+    "# Load the csv data using pd.read_csv.\n",
+    "ott = pd.read_csv('ott_merge.csv')\n",
+    "\n",
+    "# Data imported correctly?\n",
+    "print(movies.columns)\n",
+    "print(movies.shape)\n",
+    "print(ott.columns)\n",
+    "print(ott.shape)\n",
+    "\n",
+    "# Merge the two DataFrames.\n",
+    "mov_ott = pd.merge(movies, ott, how='left', on = 'ID')\n",
+    "\n",
+    "# DataFrames merged correctly?\n",
+    "print(mov_ott.columns)\n",
+    "print(mov_ott.shape)\n",
+    "\n",
+    "# Determine movies per year and age group.\n",
+    "movies.pivot(index='Title', columns='Age', \n",
+    "             values='Year')\n",
+    "\n",
+    "# Determine movies, directors, and genres per age group.\n",
+    "movies.pivot(index='Title', columns='Age', \n",
+    "             values=['Directors', 'Genres'])\n",
+    "\n",
+    "# Determine movies, year, and language per age group.\n",
+    "movies.pivot(index='Title', columns='Age', \n",
+    "             values=['Year', 'Language'])\n",
+    "\n",
+    "# Determine the language, runtime, and country of movies screened by Netflix.\n",
+    "mov_ott.pivot(index='Title', columns='Netflix', \n",
+    "              values=['Language', 'Runtime', 'Country'])\n",
+    "\n",
+    "# Determine the movies, language, runtime, and genres per age group.\n",
+    "mov_ott.pivot(index='Title', columns='Age', \n",
+    "              values=['Language', 'Runtime','Genres'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2a29d0be",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Create a subset of the mov_ott DataFrame as mov_ott_runtime consisting of the columns ID, Runtime and Genres. \n",
+    "#Print the DataFrame.\n",
+    "#Add 60 seconds to the Runtime of each movie. (Hint: Add an extra 1 minute to the Runtime of each movie. \n",
+    "#The Runtime column is a Series so you can use the DataFrame.add() function.)\n",
+    "\n",
+    "#Create a new column (Gen_doc) in the mov_ott_runtime DataFrame to indicate the Genres as Documentary or Not Documentary.\n",
+    "#    To create a new column, use the method DataFrame[column].\n",
+    "#    You can use the np.where() function to replace the Genres string with Documentary or Not Documentary.\n",
+    "#    Indicate the DataFrame and column name (mov_ott_runtime['Genres']) where the strings are located.\n",
+    "#    Specify how to replace the strings with str.contains('Documnetary'). \n",
+    "#    Specify how to replace the string as 'Documentary', 'Not Documentary'.\n",
+    "#    Print the DataFrame.\n",
+    "#    Determine the number of characters of the Gen_doc column with the len() method.\n",
+    "\n",
+    "#Challenge: Can you think of a way to help the political party save money? Mandisa suggests subtracting 6 seconds \n",
+    "#(0.01 minutes) from the Runtime of all the movies, resulting in saving if they limit the number of adverts during a movie. \n",
+    "#Save the Notebook to your Github repository by uploading and committing any changes."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a15b79ca",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Create a subset of the mov_ott DataFrame as mov_ott_runtime consisting of the columns ID, Runtime and Genres. \n",
+    "#Print the DataFrame.\n",
+    "\n",
+    "mov_ott_runtime = mov_ott.loc[:,[\"ID\",\"Runtime\",\"Genres\"]]\n",
+    "mov_ott_runtime"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f0f5ff8e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Add 60 seconds to the Runtime of each movie. (Hint: Add an extra 1 minute to the Runtime of each movie. \n",
+    "#The Runtime column is a Series so you can use the DataFrame.add() function.)\n",
+    "\n",
+    "mov_ott_runtime[\"Runtime_new\"] = mov_ott_runtime[\"Runtime\"].add(1)\n",
+    "mov_ott_runtime"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f6a3b1d7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Create a new column (Gen_doc) in the mov_ott_runtime DataFrame to indicate the Genres as Documentary or Not Documentary.\n",
+    "#    To create a new column, use the method DataFrame[column].\n",
+    "#    You can use the np.where() function to replace the Genres string with Documentary or Not Documentary.\n",
+    "#    Indicate the DataFrame and column name (mov_ott_runtime['Genres']) where the strings are located.\n",
+    "#    Specify how to replace the strings with str.contains('Documnetary'). \n",
+    "#    Specify how to replace the string as 'Documentary', 'Not Documentary'.\n",
+    "#    Print the DataFrame.\n",
+    "\n",
+    "import numpy as np\n",
+    "mov_ott_runtime[\"Gen_doc\"]= np.where(mov_ott_runtime[\"Genres\"].str.contains('Documentary'),\"Documentary\",'NotDocumentary')\n",
+    "mov_ott_runtime\n",
+    "\n",
+    "#DAMN I DID IT, HOLY CRAP DID NOT EXPECT THAT TO WORK\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "62223593",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#    Determine the number of characters of the Gen_doc column with the len() method.\n",
+    "mov_ott_runtime[\"Gen_doc_len\"] = mov_ott_runtime[\"Gen_doc\"].apply(len)\n",
+    "mov_ott_runtime"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a0a22d95",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Challenge: Can you think of a way to help the political party save money? Mandisa suggests subtracting 6 seconds \n",
+    "#(0.01 minutes) from the Runtime of all the movies, resulting in saving if they limit the number of adverts during a movie. \n",
+    "#Save the Notebook to your Github repository by uploading and committing any changes.\n",
+    "\n",
+    "#SCENARIO\n",
+    "#The fee for running an ad is a flat rate per 10 seconds of advertisement with a minimum of purchasing 60 seconds of \n",
+    "#advertising time per film. They also have a promotional, reduced fee, for ads run during any film in the documentary \n",
+    "#genre.\n",
+    "\n",
+    "#To save money, limit each advert to 60s only in documentary genre films?"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a2eccfa5",
+   "metadata": {},
+   "source": [
+    "# LSE's Solution"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "53772d3a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Import Pandas and NumPy.\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "\n",
+    "# Load the excel data using pd.read_excel.\n",
+    "movies = pd.read_excel('movies_merge.xlsx')\n",
+    "\n",
+    "# Load the csv data using pd.read_csv.\n",
+    "ott = pd.read_csv('ott_merge.csv')\n",
+    "\n",
+    "# Data imported correctly?\n",
+    "print(movies.columns)\n",
+    "print(movies.shape)\n",
+    "print(ott.columns)\n",
+    "print(ott.shape)\n",
+    "\n",
+    "# Merge the two DataFrames.\n",
+    "mov_ott = pd.merge(movies, ott, how='left', on = 'ID')\n",
+    "\n",
+    "# DataFrames merged correctly?\n",
+    "print(mov_ott.columns)\n",
+    "print(mov_ott.shape)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "70c4d3b3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Determine the runtime of each movie.\n",
+    "mov_ott_runtime = mov_ott[['ID', 'Runtime', 'Genres']]\n",
+    "\n",
+    "# View the output.\n",
+    "mov_ott_runtime"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "460f7b0c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Add 60 seconds or 1 minute to runtime.\n",
+    "mov_ott_runtime['Runtime'].add(1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "90462c80",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Create a new column with documentaries.\n",
+    "mov_ott_runtime['Gen_doc'] = np.where(mov_ott_runtime['Genres'].str.contains('Documentary'),\n",
+    "                                      'Documentary', 'Not Documentary')\n",
+    "\n",
+    "# View the DataFrame.\n",
+    "mov_ott_runtime"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d9e1d730",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Use the applymap (determine length of string).\n",
+    "mov_ott_runtime.Gen_doc.apply(len)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "35e57efb",
+   "metadata": {},
+   "source": [
+    "# Challenge\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8119cb2e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Determine original runtime.\n",
+    "mov_ott_runtime[['ID', 'Runtime']]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "122d6d08",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Subtract 0.01 from runtime.\n",
+    "mov_ott_runtime['Runtime'].subtract(0.01)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "22a7a647",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Add 60 seconds or one minute with lambda function.\n",
+    "mov_ott['Runtime'] = mov_ott['Runtime'].apply(lambda x: x + 1)\n",
+    "\n",
+    "# View output\n",
+    "mov_ott['Runtime']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e717c4fb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Subtract 0.01 from runtime with lamda function.\n",
+    "mov_ott['Runtime'] = mov_ott_runtime['Runtime'].apply(lambda x: x - 0.01)\n",
+    "\n",
+    "# View output\n",
+    "mov_ott['Runtime']"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.8"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
